@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_app/BodyBean.dart';
+import 'dart:convert';
+
 
 class TestHome extends StatelessWidget {
   @override
@@ -33,12 +36,12 @@ class MyBody extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(0, 0, 0, 2),
               child: Text('应用基本信息', style: textStyle),
             ),
-            new AppInfo(title: "测试APP",appId: "com.test.test",packName: "com.test.test",),
+            new AppInfo(),
             Padding(
               padding: EdgeInsets.fromLTRB(0, 16, 0, 2),
               child: Text('版本信息', style: textStyle),
             ),
-            new VersionInfo1(),
+            /*new VersionInfo1(),*/
             new VersionInfo2(),
             new VersionInfo3(),
             new BottomInfo1(),
@@ -51,9 +54,23 @@ class AppInfoStatue extends State<AppInfo>{
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
-    void showToast(){
-      print(">>>>>>>>");
+    void showToast() async {
+
+      try {
+        Response response = await Dio().get("http://192.168.31.146:88/flutter/getBean");
+        print(response);
+
+        Map userMap = json.decode(response.toString());
+        var user = new BodyBean.fromJson(userMap);
+        setState(() {
+          widget.bodyBean=user;
+        });
+
+      } catch (e) {
+        print(e);
+      }
     }
+    showToast();
     // TODO: implement build
     return new Container(
         color: Color.fromARGB(255, 255, 255, 207),
@@ -76,12 +93,12 @@ class AppInfoStatue extends State<AppInfo>{
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
                     child: Text(
-                      widget.title,
+                      widget.bodyBean.title,
                       style: textStyle,
                     ),
                   ),
-                  Text(widget.appId),
-                  Text(widget.packName),
+                  Text(widget.bodyBean.appId),
+                  Text(widget.bodyBean.packName),
                   Row(
                     children: <Widget>[
                       Text("          "),
@@ -103,15 +120,23 @@ class AppInfoStatue extends State<AppInfo>{
 
 }
 class AppInfo extends StatefulWidget {
-  AppInfo({Key key, this.title,this.appId,this.packName}) : super(key: key);
-  final String title;
-  final String appId;
-  final String packName;
+  AppInfo({Key key}) : super(key: key);
+  var bodyBean=new BodyBean(">>",">>","...");
   @override
   AppInfoStatue createState() => AppInfoStatue();
 }
 
-class VersionInfo1 extends StatelessWidget {
+class VersionInfo1 extends State<AppInfo> {
+
+  void setBean(){
+    setState(() {
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+    });
+  }
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
@@ -126,7 +151,7 @@ class VersionInfo1 extends StatelessWidget {
                 '版本号',
                 style: textStyle,
               ),
-              Row(
+              InkWell(child:  Row(
                 children: <Widget>[
                   Container(
                     child: Padding(
@@ -142,7 +167,8 @@ class VersionInfo1 extends StatelessWidget {
                   Container(width: 80, child: Text("新版本")),
                   Text("应用待修改"),
                 ],
-              )
+              ),),
+
             ]),
       ),
     );
