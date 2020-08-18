@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app/BodyBean.dart';
 import 'dart:convert';
 
@@ -103,7 +104,7 @@ class AppInfoStatue extends State<AppInfo>{
                     children: <Widget>[
                       Text("          "),
                       FlatButton(
-                        onPressed: showToast,
+                        onPressed: _getBatteryLevel,
                         child: Text(
                           "前往应用市场查看",
                         ),
@@ -116,6 +117,18 @@ class AppInfoStatue extends State<AppInfo>{
           ],
         ));
     /*  return */
+  }
+  static const platform = const MethodChannel('samples.flutter.dev/battery');
+  Future<void> _getBatteryLevel() async {
+    String batteryLevel;
+    try {
+      final int result = await platform.invokeMethod('getBatteryLevel');
+      batteryLevel = 'Battery level at $result % .';
+    } on PlatformException catch (e) {
+      batteryLevel = "Failed to get battery level: '${e.message}'.";
+    }
+
+    print(batteryLevel);
   }
 
 }
