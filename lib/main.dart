@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'test.dart';
@@ -13,6 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        hintColor: Colors.transparent,
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
@@ -143,7 +145,10 @@ class MyStatelessWidget extends StatelessWidget {
               ),
               ButtonBar(
                 children: <Widget>[
-                  FlatButton(
+                  RaisedButton(
+                    elevation: 0,
+                    hoverElevation: 4,
+                    highlightElevation: 4,
                     child: const Text('跳转'),
                     onPressed: () {
                       Navigator.push(
@@ -153,8 +158,24 @@ class MyStatelessWidget extends StatelessWidget {
                       );
                     },
                   ),
+                   getOutlineButton(context),
+                  /*   FlatButton(
+                    child: const Text('跳转'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => new TestHome()),
+                      );
+                    },
+                  ),*/
                   FlatButton(
                     child: const Text('跳转'),
+                    // 按下的背景色
+                    splashColor: Colors.green,
+                    // 水波纹颜色
+
+                    highlightColor: Colors.transparent,
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -172,4 +193,40 @@ class MyStatelessWidget extends StatelessWidget {
       padding: EdgeInsets.all(16.0),
     );
   }
+}
+
+Widget getOutlineButton(BuildContext context) {
+  return OutlineButton(
+    onPressed: () {
+
+    },
+    child: Text("OutlineButton"),
+//      onHighlightChanged: onHighlightChanged,
+    textTheme: ButtonTextTheme.accent,
+    textColor: Colors.blueAccent,
+    disabledTextColor: Colors.red,
+    color: Color(0xFF2962FF),
+//      disabledColor: Colors.grey,
+    highlightColor: Color(0xFF2962FF),
+    // 按下的背景色
+    splashColor: Colors.transparent,
+    // 水波纹颜色
+//      colorBrightness: Brightness.light,   // 主题
+//      elevation: 10,
+    highlightElevation: 0,
+//      disabledElevation: 10,
+    padding: EdgeInsets.all(10),
+    borderSide:new BorderSide(color: Colors.transparent),
+//       RaisedButton 才起效
+/*    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(0)),
+        side: BorderSide(
+            color: Colors.transparent, style: BorderStyle.none, width: 0)),*/
+
+    clipBehavior: Clip.antiAlias,
+//      materialTapTargetSize: MaterialTapTargetSize.padded,
+//      animationDuration: Duration(seconds:1),
+//      minWidth: 200,
+//      height: 50,
+  );
 }
